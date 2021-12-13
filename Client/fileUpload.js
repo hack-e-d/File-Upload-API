@@ -5,13 +5,12 @@ function uploadFile() {
     data.append('file', file)
     data.append('user', 'hubot')
     console.log(data.get('file'));
-    
+
     fetch('http://localhost:3000/upload', {
         method: 'POST',
         headers: {
-            // Content-Type may need to be completely **omitted**
-            // or you may need something
-            "Content-Type": "You will perhaps need to define a content-type here"
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data'
         },
         body: data // This is your file object
     }).then(
