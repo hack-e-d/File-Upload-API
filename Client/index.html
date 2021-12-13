@@ -1,18 +1,18 @@
 <html>
 
-  <head>
-    <title>Upload Images</title>
-    <script src = "fileUpload.js"></script>
-  </head>
+<head>
+  <title>FILE UPLOAD DEMO</title>
+</head>
 
-  <body>
-    <div>
-      <label class="col-3" >Choose file for Upload</label>
-    </div>
-    <div>
-      <input type="file" id="files" name="files[]" accept="image/*" multiple />
-    </div>
-    <button onclick="uploadFile()" >Upload</button>
-  </body>
+<body>
+  <h1>Single File Upload Demo</h1>
+
+  <form action="http://localhost:8080/uploadProfilePicture" enctype="multipart/form-data" method="POST">
+
+    <span>Upload Profile Picture:</span>
+    <input type="file" name="mypic" required /> <br>
+    <input type="submit" value="submit">
+  </form>
+</body>
 
 </html>

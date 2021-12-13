@@ -1,66 +1,81 @@
-const express = require('express')
-const multer = require('multer')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const firebase = require('./firebase')
-
+const express = require("express")
+const path = require("path")
+const multer = require("multer")
 const app = express()
+	
+// View Engine Setup
+app.set("views",path.join(__dirname,"views"))
+app.set("view engine","ejs")
+	
+// var upload = multer({ dest: "Upload_folder_name" })
+// If you do not want to use diskStorage then uncomment it
+	
+var storage = multer.diskStorage({
+	destination: function (req, file, cb) {
 
-const corsOptions = {
-    origin: '*',
-    credentials: true,
-  };
-
-app.use(cors(corsOptions))
-
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
-/**bodyParser.json(options)
- * Parses the text as JSON and exposes the resulting object on req.body.
- */
-app.use(bodyParser.json());
-
-const upload = multer({
-    storage: multer.memoryStorage()
+		// Uploads is the Upload_folder_name
+		cb(null, "uploads")
+	},
+	filename: function (req, file, cb) {
+	cb(null, file.fieldname + "-" + Date.now()+".jpg")
+	}
 })
+	
+// Define the maximum size for uploading
+// picture i.e. 1 MB. it is optional
+const maxSize = 1 * 1000 * 1000;
+	
+var upload = multer({
+	storage: storage,
+	limits: { fileSize: maxSize },
+	fileFilter: function (req, file, cb){
+	
+		// Set the filetypes, it is optional
+		var filetypes = /jpeg|jpg|png/;
+		var mimetype = filetypes.test(file.mimetype);
 
-app.get('/', (req,res) => {
-    console.log("Server / api hit");
-    res.status(200).send("{'Message' : 'Server On'}");
+		var extname = filetypes.test(path.extname(
+					file.originalname).toLowerCase());
+		
+		if (mimetype && extname) {
+			return cb(null, true);
+		}
+	
+		cb("Error: File upload only supports the "
+				+ "following filetypes - " + filetypes);
+	}
+
+// mypic is the name of file attribute
+}).single("mypic");	
+
+app.get("/",function(req,res){
+	res.render("Signup");
 })
+	
+app.post("/uploadProfilePicture",function (req, res, next) {
+		
+	// Error MiddleWare for multer file upload, so if any
+	// error occurs, the image would not be uploaded!
+	upload(req,res,function(err) {
 
-app.post('/upload', (req, res) => {
-    console.log(req);
-    var data = req.body;
-    console.log(typeof(data));
-    res.status(200).send("{'message' : 'OK'}");
-    // if(!req.file) {
-    //     console.log("No file in /upload api call");
-    //     res.status(400).send("Error: No files found");
-    // } else {
-    //     const blob = firebase.bucket.file(req.file.originalname);
-        
-    //     const blobWriter = blob.createWriteStream({
-    //         metadata: {
-    //             contentType: req.file.mimetype
-    //         }
-    //     });
-        
-    //     blobWriter.on('error', (err) => {
-    //         console.log(err)
-    //     });
-        
-    //     blobWriter.on('finish', () => {
-    //         console.log("File uploaded with /upload api call");
-    //         res.status(200).send("File uploaded.");
-    //     });
-        
-    //     blobWriter.end(req.file.buffer);
-    // }
+		if(err) {
+
+			// ERROR occured (here it can be occured due
+			// to uploading image of size greater than
+			// 1MB or uploading different file type)
+			res.send(err)
+		}
+		else {
+
+			// SUCCESS, image successfully uploaded
+			res.send("Success, Image uploaded!")
+		}
+	})
 })
-
-app.listen(3000, () => {
-    console.log('🚀Server listening on port 3000');
-});
+	
+// Take any port number of your choice which
+// is not taken by any other process
+app.listen(8080,function(error) {
+	if(error) throw error
+		console.log("Server created Successfully on PORT 8080")
+})
