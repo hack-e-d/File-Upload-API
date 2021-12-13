@@ -1,10 +1,18 @@
 <html>
+
   <head>
-    <form method="post"
-          enctype="multipart/form-data"
-          action="http://localhost:3000/upload">
-      <input type="file" name="myimage" />
-      <input type="submit" name="submit" value="submit"/>
-    </form>
+    <title>Upload Images</title>
+    <script src = "fileUpload.js"></script>
   </head>
+
+  <body>
+    <div>
+      <label class="col-3" >Choose file for Upload</label>
+    </div>
+    <div>
+      <input type="file" id="files" name="files[]" accept="image/*" multiple />
+    </div>
+    <button onclick="uploadFile()" >Upload</button>
+  </body>
+
 </html>
