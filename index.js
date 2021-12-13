@@ -35,6 +35,7 @@ app.post('/upload', (req, res) => {
     console.log(req);
     var data = req.body;
     console.log(typeof(data));
+    console.log(req.file);
     res.status(200).send("{'message' : 'OK'}");
     // if(!req.file) {
     //     console.log("No file in /upload api call");
