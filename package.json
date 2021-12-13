@@ -4,7 +4,9 @@
   "description": "File upload API ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node index.js",
+    "dev-start" : "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^10.0.0",
-    "multer": "^1.4.4"
+    "multer": "^1.4.4",
+    "nodemon": "^2.0.15"
   }
 }
