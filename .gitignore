@@ -9,6 +9,9 @@ lerna-debug.log*
 # node modules
 node_modules
 
+# images excluded
+images/
+
 # Firebase config
 config.js
 
